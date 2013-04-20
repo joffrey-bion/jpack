@@ -1,0 +1,20 @@
+package compression.huffman.adaptive;
+
+public class DynamicHuffman {
+
+    public DynamicHuffman(String filename) {
+        // TODO reader/writer ?
+        // TODO new empty tree
+    }
+
+    public void encode(Character c) {
+        // TODO write code
+        // TODO insert c
+    }
+
+    public Character decode() {
+        // TODO read code and decode char or NYT+char
+        // TODO insert char
+        return null;
+    }
+}
