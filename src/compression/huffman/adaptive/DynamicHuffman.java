@@ -2,7 +2,7 @@ package compression.huffman.adaptive;
 
 public class DynamicHuffman {
 
-    public DynamicHuffman(String filename) {
+    public DynamicHuffman() {
         // TODO reader/writer ?
         // TODO new empty tree
     }

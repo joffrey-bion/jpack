@@ -11,7 +11,7 @@ public class DHTree {
     private DHTree one; // son corresponding to code 1
 
     // leaf attribute
-    private Character c;
+    private Character character;
 
     /** Creates a new NYT root (starting tree). */
     public DHTree() {
@@ -20,7 +20,7 @@ public class DHTree {
         this.number = Character.MAX_VALUE;
         this.zero = null;
         this.one = null;
-        this.c = null;
+        this.character = null;
     }
 
     /** Creates a new NYT leaf. */
@@ -30,7 +30,7 @@ public class DHTree {
         this.number = parent.number - 2;
         this.zero = null;
         this.one = null;
-        this.c = null;
+        this.character = null;
     }
 
     /** Creates a new character leaf. */
@@ -40,7 +40,7 @@ public class DHTree {
         this.number = parent.number - 1;
         this.zero = null;
         this.one = null;
-        this.c = c;
+        this.character = c;
     }
 
     public boolean isRoot() {
@@ -49,11 +49,11 @@ public class DHTree {
 
     public boolean isLeaf() {
         // either a character leaf or NYT
-        return c != null || weight == 0;
+        return character != null || weight == 0;
     }
 
     public Character getChar() {
-        return c;
+        return character;
     }
     
     public String getCode(Character c) {
@@ -62,7 +62,7 @@ public class DHTree {
     
     private String getCode(Character c, String code) {
         if (isLeaf())
-            return this.c == c ? code : "";
+            return this.character == c ? code : "";
         else
             return zero.getCode(c, code + "0") + one.getCode(c, code + "1");
     }
@@ -72,7 +72,7 @@ public class DHTree {
         if (node == null) {
             node = getLeaf(null); // gets NYT
             node.zero = new DHTree(node); // new NYT
-            node.one = new DHTree(c, node); // new node for c
+            node.one = new DHTree(c, node); // new node for character
         }
         node.update();
     }
@@ -88,7 +88,7 @@ public class DHTree {
 
     private DHTree getLeaf(Character c) {
         if (isLeaf()) {
-            return (this.c == c) ? this : null;
+            return (this.character == c) ? this : null;
         } else {
             DHTree node = zero.getLeaf(c);
             return (node == null) ? one.getLeaf(c) : node;
@@ -137,7 +137,7 @@ public class DHTree {
         String indR = newIndent + " " + endBranch + hline;
         String res = indent;
         if (isLeaf()) {
-            res += "<" + c + ">";
+            res += "<" + character + ">";
         } else {
             res += "[#]\n";
             if (zero == null)
@@ -153,6 +153,7 @@ public class DHTree {
         return res;
     }
 
+    @Override
     public String toString() {
         return toString("");
     }

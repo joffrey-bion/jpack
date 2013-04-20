@@ -46,7 +46,7 @@ public class BinWriter {
      * {@link Integer#SIZE}.
      */
     public void writeInteger(int value) throws IOException {
-        writeValue((long) value, Integer.SIZE);
+        writeValue(value, Integer.SIZE);
     }
 
     /**
@@ -54,7 +54,7 @@ public class BinWriter {
      * {@link Character#SIZE}.
      */
     public void writeCharacter(char value) throws IOException {
-        writeValue((long) value, Character.SIZE);
+        writeValue(value, Character.SIZE);
     }
 
     /**
@@ -75,7 +75,7 @@ public class BinWriter {
      * bits used to write it.
      */
     public void writeIntegerWithLength(int value) throws IOException {
-        writeWithLength((long) value, 5);
+        writeWithLength(value, 5);
     }
 
     /**
