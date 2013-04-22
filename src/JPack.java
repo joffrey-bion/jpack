@@ -53,11 +53,11 @@ public class JPack {
             return MODE_COMPRESS;
         } else if (args[ARG_MODE].equals("-d")) {
             return MODE_DECOMPRESS;
-        } else if (args[ARG_MODE].equals("-test")) {
+        } else if (args[ARG_MODE].equals("-t")) {
             return MODE_TEST;
         } else {
             System.err.println("Unknown mode '" + args[ARG_MODE]
-                    + "', must be one of '-c' or '-d'.");
+                    + "', must be one of '-c', '-d' or '-t'.");
             return MODE_ERROR;
         }
     }

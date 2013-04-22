@@ -18,7 +18,7 @@ package compression.move_to_front;
  */
 class MTFCharShift {
 
-    private static final int MOST_RECURRENT_CHARS_START = (int) 'A';
+    private static final char MOST_RECURRENT_CHARS_START = 'A';
 
     /** Gives the character corresponding to the given code. */
     public static char intToChar(int i) {
@@ -28,7 +28,7 @@ class MTFCharShift {
 
     /** Gives the code of the given character. */
     public static int charToInt(char c) {
-        return rangeModulo((int) c - MOST_RECURRENT_CHARS_START, Character.MIN_VALUE,
+        return rangeModulo(c - MOST_RECURRENT_CHARS_START, Character.MIN_VALUE,
                 Character.MAX_VALUE);
     }
 
