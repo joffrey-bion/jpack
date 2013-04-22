@@ -6,9 +6,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.TreeMap;
 
 import binary_io.BinReader;
 import binary_io.BinWriter;
+import binary_io.UnicodeReader;
 
 /**
  * This static class uses Huffman algorithm to encode a text file into a binary file,
@@ -45,13 +47,12 @@ public class StaticHuffman {
      *            create/overwrite.
      */
     public static void encode(String sourceName, String destName) throws IOException {
-        // read the file and build a huffman tree according to charactesr frequencies
-        SHTree huffmanTree = new SHTreeBuilder(sourceName).buildTree();
-        System.out.println(huffmanTree);
+        // read the file and build a huffman tree according to characters frequencies
+        SHTree huffmanTree = buildTree(sourceName);
         // build a code table corresponding to the tree
         SHCodeTable table = new SHCodeTable(huffmanTree);
-        BinWriter writer = new BinWriter(destName);
         // write the size of the original file
+        BinWriter writer = new BinWriter(destName);
         writer.writeLongWithLength(new File(sourceName).length());
         // encode the tree in the file
         writeTree(writer, huffmanTree);
@@ -89,6 +90,36 @@ public class StaticHuffman {
         }
         reader.close();
         writer.close();
+    }
+
+    /**
+     * Creates the Huffman tree corresponding to the frequencies of the characters in
+     * the specified file.
+     * 
+     * @param filename
+     *            The relative path to the source text file whose Huffman tree is
+     *            desired.
+     * @return The Huffman tree corresponding to the frequencies of the characters in
+     *         the specified file.
+     * @throws IOException
+     *             If any exception occurs while reading the source file.
+     */
+    private static SHTree buildTree(String filename) throws IOException {
+        TreeMap<Character, Integer> frequencies = new TreeMap<>();
+        UnicodeReader reader = new UnicodeReader(filename);
+        // count the frequency of each character in the whole file
+        int character;
+        while ((character = reader.read()) != -1) {
+            Integer count = frequencies.get((char) character);
+            // if the character is not in the map, initialize count
+            if (count == null) {
+                count = 0;
+            }
+            // increments the frequency of the character
+            frequencies.put((char) character, count + 1);
+        }
+        reader.close();
+        return SHTree.buildTree(frequencies);
     }
 
     /**
@@ -142,7 +173,7 @@ public class StaticHuffman {
      * Decodes one character from the encoded file.
      * 
      * @param reader
-     *            The {@link BinWriter} to use to write in the file.
+     *            The {@link BinReader} to use to read the file.
      * @return The decoded {@code Character}.
      */
     private static char decodeChar(BinReader reader, SHTree huffmanTree) throws IOException {

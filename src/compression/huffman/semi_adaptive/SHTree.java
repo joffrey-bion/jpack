@@ -1,5 +1,8 @@
 package compression.huffman.semi_adaptive;
 
+import java.util.Map;
+import java.util.PriorityQueue;
+
 /**
  * Represents a static Huffman tree.
  * 
@@ -34,9 +37,9 @@ public class SHTree implements Comparable<SHTree> {
      * @param c
      *            The {@code Character} corresponding to this leaf.
      * @param frequency
-     *            The number of occurrences of {@code c} in the source file.
+     *            The number of occurrences of {@code c} in the text.
      */
-    public SHTree(Character c, int frequency) {
+    private SHTree(Character c, int frequency) {
         this.frequency = frequency;
         this.zero = null;
         this.one = null;
@@ -107,14 +110,47 @@ public class SHTree implements Comparable<SHTree> {
     }
 
     /**
-     * Compares this tree to the given tree using the frequencies of the represented
-     * {@code Character}s. The frequency of an internal node is the sum of the
-     * frequencies of its sons, and was automatically computed in its constructor
-     * {@link #SHTree(SHTree, SHTree)}.
+     * Compares this tree to the specified tree using their frequencies:
+     * <ul>
+     * <li>The frequency of a leaf is given in the constructor
+     * {@link #SHTree(Character, int)}.</li>
+     * <li>The frequency of an internal node is the sum of the frequencies of its
+     * sons, and is computed in the constructor {@link #SHTree(SHTree, SHTree)} .</li>
+     * </ul>
+     * 
+     * @param tree
+     *            The {@link SHTree} to compare this tree with.
+     * @return A negative integer, 0 or a positive integer whether this tree is
+     *         respectively less than, equal or greater than the specified tree.
      */
     @Override
     public int compareTo(SHTree tree) {
         return frequency - tree.frequency;
+    }
+
+    /**
+     * Uses the given character frequencies to build a Huffman tree.
+     * 
+     * @return The Huffman tree corresponding to the frequencies of the characters in
+     *         the specified map, or {@code null} if the specified map is empty.
+     */
+    public static SHTree buildTree(Map<Character, Integer> frequencies) {
+        // will store all the subtrees during the tree construction
+        PriorityQueue<SHTree> treesPool = new PriorityQueue<>();
+        // add each character as a single-leaf tree in the queue
+        for (char c : frequencies.keySet()) {
+            treesPool.add(new SHTree(c, frequencies.get(c)));
+        }
+        // merge the 2 lowest-frequency trees until only one is left
+        while (treesPool.size() > 1) {
+            SHTree zero = treesPool.poll();
+            SHTree one = treesPool.poll();
+            treesPool.add(new SHTree(zero, one));
+            // size decreases by one at each iteration
+        }
+        // the only resulting element of the queue is the Huffman tree
+        // peek() will return null if the map was empty
+        return treesPool.peek();
     }
 
     /*

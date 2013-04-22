@@ -5,6 +5,12 @@ import java.util.TreeMap;
 /**
  * Represents a Huffman table, mapping each character of the source file to its
  * Huffman code.
+ * <p>
+ * <b>Important note:</b> if the Huffman tree corresponding to this
+ * {@code SHCodeTable} contains only a single leaf, then the Huffman code of this
+ * particular character is the empty code. Therefore, the decoder has to know the
+ * number of characters in the original file to be able to decode properly.
+ * </p>
  * 
  * @author <a href="mailto:joffrey.bion@gmail.com">Joffrey Bion</a>
  */
@@ -53,8 +59,7 @@ class SHCodeTable {
      * @return The Huffman code of {@code c}, as a binary {@code String}. If
      *         {@code c} was not in the source file, it is not in this table, so
      *         {@code null} is returned. If {@code c} is the only node in the tree,
-     *         then its Huffman code is the empty {@code String}: "". Therefore, the
-     *         decoder has to know the number of characters to decode.
+     *         then its Huffman code is the empty {@code String}: "".
      */
     public String getCode(Character c) {
         return table.get(c);
