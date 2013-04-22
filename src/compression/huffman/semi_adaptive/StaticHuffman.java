@@ -1,11 +1,9 @@
 package compression.huffman.semi_adaptive;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.TreeMap;
 
 import binary_io.BinReader;
@@ -53,11 +51,11 @@ public class StaticHuffman {
         SHCodeTable table = new SHCodeTable(huffmanTree);
         // write the size of the original file
         BinWriter writer = new BinWriter(destName);
-        writer.writeLongWithLength(new File(sourceName).length());
+        writer.writeLongWithLength(huffmanTree.getNbCharactersRead());
         // encode the tree in the file
         writeTree(writer, huffmanTree);
         // encode each character of the original file into the output file
-        BufferedReader reader = new BufferedReader(new FileReader(sourceName));
+        UnicodeReader reader = new UnicodeReader(sourceName);
         int character;
         while ((character = reader.read()) != -1) {
             writer.write(table.getCode((char) character));
@@ -83,7 +81,7 @@ public class StaticHuffman {
         if (nbChars > 0) // no tree to read if the original file is empty
             huffmanTree = readTree(reader);
         // decode each character in the file with the tree
-        BufferedWriter writer = new BufferedWriter(new FileWriter(destName));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destName), "UTF-8"));
         while (nbChars > 0) {
             writer.write(decodeChar(reader, huffmanTree));
             nbChars--;

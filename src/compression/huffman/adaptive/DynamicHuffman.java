@@ -14,7 +14,7 @@ public class DynamicHuffman {
 
     public Character decode() {
         // TODO read code and decode char or NYT+char
-        // TODO insert char
+        // TODO insert char in the Tree
         return null;
     }
 }

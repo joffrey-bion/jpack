@@ -110,6 +110,15 @@ public class SHTree implements Comparable<SHTree> {
     }
 
     /**
+     * Returns the total number of characters in the text represented by this tree.
+     * 
+     * @return the total number of characters in the text represented by this tree.
+     */
+    public long getNbCharactersRead() {
+        return frequency;
+    }
+
+    /**
      * Compares this tree to the specified tree using their frequencies:
      * <ul>
      * <li>The frequency of a leaf is given in the constructor

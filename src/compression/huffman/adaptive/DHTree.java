@@ -1,5 +1,6 @@
 package compression.huffman.adaptive;
 
+// TODO maybe keep track of the root of the tree in each node
 public class DHTree {
 
     private int weight;
@@ -95,6 +96,8 @@ public class DHTree {
         }
     }
 
+    // TODO find max in next block instead
+    // FIXME this should probably start from the root and look down the tree
     private DHTree getMaxInBlock() {
         if (parent.weight == weight)
             return parent.getMaxInBlock();
@@ -105,6 +108,7 @@ public class DHTree {
         // TODO check if needed to go farther to the right
     }
 
+    // TODO replace swap by a slide
     private void swapWith(DHTree tree) {
         if (parent.zero == this) {
             parent.zero = tree;

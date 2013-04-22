@@ -5,6 +5,7 @@ public class JPack {
     private static final int MODE_ERROR = 0;
     private static final int MODE_COMPRESS = 1;
     private static final int MODE_DECOMPRESS = 2;
+    private static final int MODE_TEST = 3;
 
     private static final int NB_ARGS_MIN = 2;
     private static final int NB_ARGS_MAX = 3;
@@ -18,9 +19,16 @@ public class JPack {
             printUsage();
             return;
         }
-        String sourceName = args[ARG_FILE_SOURCE];
-        String destName;
-        if (args.length >= ARG_FILE_DEST)
+        String sourceName, destName;
+        if (mode == MODE_TEST) {
+            sourceName = args[ARG_FILE_SOURCE] + ".txt";
+            destName = args[ARG_FILE_SOURCE] + ".pck";
+            Compressor.compress(sourceName, destName);
+            Compressor.uncompress(destName, args[ARG_FILE_SOURCE] + "-R.txt");
+            return;
+        }
+        sourceName = args[ARG_FILE_SOURCE];
+        if (args.length > ARG_FILE_DEST)
             destName = args[ARG_FILE_DEST];
         else
             destName = sourceName + ".pck";
@@ -45,6 +53,8 @@ public class JPack {
             return MODE_COMPRESS;
         } else if (args[ARG_MODE].equals("-d")) {
             return MODE_DECOMPRESS;
+        } else if (args[ARG_MODE].equals("-test")) {
+            return MODE_TEST;
         } else {
             System.err.println("Unknown mode '" + args[ARG_MODE]
                     + "', must be one of '-c' or '-d'.");

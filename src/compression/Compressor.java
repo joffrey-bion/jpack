@@ -14,7 +14,11 @@ import compression.huffman.semi_adaptive.StaticHuffman;
  */
 public class Compressor {
 
-    private static final String TEMP_FILENAME = "temp.txt";
+    private static final boolean HUFFMAN = true;
+    private static final boolean BLOCK = true;
+
+    private static final String TEMP_FILENAME1 = "temp1.txt";
+    private static final String TEMP_FILENAME2 = "temp2.txt";
 
     /**
      * Compresses the given source file into the destination file
@@ -26,22 +30,31 @@ public class Compressor {
      *            overwritten.
      */
     public static void compress(String sourceName, String destName) {
+        String huffmanSource;
         // block transformations
-        try {
-            BlockCompressor bcomp = new BlockCompressor(sourceName, TEMP_FILENAME);
-            bcomp.compress();
-        } catch (FileNotFoundException e) {
-            System.err.println("File source '" + sourceName + "' not found.");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (BLOCK) {
+            try {
+                BlockCompressor bcomp = new BlockCompressor(sourceName, HUFFMAN ? TEMP_FILENAME1 : destName);
+                bcomp.compress();
+            } catch (FileNotFoundException e) {
+                System.err.println("File source '" + sourceName + "' not found.");
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            huffmanSource = TEMP_FILENAME1;
+        } else {
+            huffmanSource = sourceName;
         }
         // huffman encoding
-        try {
-            StaticHuffman.encode(TEMP_FILENAME, destName);
-        } catch (IOException e) {
-            System.err.println("I/O error in Huffman compression: " + e.getMessage());
-        }
-        deleteTempFile();
+        if (HUFFMAN)
+            try {
+                StaticHuffman.encode(huffmanSource, destName);
+            } catch (IOException e) {
+                System.err.println("I/O error in Huffman compression: " + e.getMessage());
+            }
+        new File(TEMP_FILENAME1).delete();
     }
 
     /**
@@ -55,33 +68,29 @@ public class Compressor {
      *            overwritten.
      */
     public static void uncompress(String sourceName, String destName) {
+        String blockSource;
         // huffman decoding
-        try {
-            StaticHuffman.decode(sourceName, TEMP_FILENAME);
-        } catch (IOException e) {
-            System.err.println("I/O error in Huffman decompression: " + e.getMessage());
+        if (HUFFMAN) {
+            try {
+                StaticHuffman.decode(sourceName, BLOCK ? TEMP_FILENAME2 : destName);
+            } catch (IOException e) {
+                System.err.println("I/O error in Huffman decompression: " + e.getMessage());
+                return;
+            }
+            blockSource = TEMP_FILENAME2;
+        } else {
+            blockSource = sourceName;
         }
         // block reverse transformations
-        try {
-            BlockCompressor bcomp = new BlockCompressor(TEMP_FILENAME, destName);
-            bcomp.uncompress();
-        } catch (FileNotFoundException e) {
-            System.err.println("File source '" + sourceName + "' not found.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        deleteTempFile();
-    }
-
-    /**
-     * Deletes the temporary file that was created between the block compression and
-     * semi-adaptive Huffman.
-     */
-    private static void deleteTempFile() {
-        // temporary file deletion
-        if (new File(TEMP_FILENAME).delete())
-            System.out.println("Temp file deleted");
-        else
-            System.out.println("Error deleting temp file");
+        if (BLOCK)
+            try {
+                BlockCompressor bcomp = new BlockCompressor(blockSource, destName);
+                bcomp.uncompress();
+            } catch (FileNotFoundException e) {
+                System.err.println("File source '" + blockSource + "' not found.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        new File(TEMP_FILENAME2).delete();
     }
 }

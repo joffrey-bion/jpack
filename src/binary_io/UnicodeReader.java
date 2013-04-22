@@ -85,6 +85,7 @@ public class UnicodeReader extends Reader {
         } else {
             reader = new BufferedReader(new InputStreamReader(pbis, encoding));
         }
+        System.out.println("Reader encoding " + encoding);
     }
 
     /**

@@ -1,6 +1,5 @@
 package compression;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,7 +23,7 @@ class BlockCompressor {
     private static final int BLOCK_SIZE = 4096;
     private static final int BLOCK_HEADER_SIZE = 3;
 
-    private BufferedReader reader;
+    private UnicodeReader reader;
     private BufferedWriter writer;
 
     private MoveToFront mtf;
@@ -42,7 +41,7 @@ class BlockCompressor {
      *             If any problem occurs while reading or writing in the given files.
      */
     public BlockCompressor(String sourceName, String destName) throws IOException {
-        reader = new BufferedReader(new UnicodeReader(sourceName));
+        reader = new UnicodeReader(sourceName, "UTF-8");
         writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destName), "UTF-8"));
         mtf = new MoveToFront();
     }
@@ -72,7 +71,6 @@ class BlockCompressor {
      *             If any problem occurs while reading or writing in the given files.
      */
     public void uncompress() throws IOException {
-        mtf = new MoveToFront();
         CBlock block;
         while ((block = readCBlock()) != null) {
             writer.write(reverseBlock(block));
@@ -101,6 +99,7 @@ class BlockCompressor {
         int n = reader.read(str);
         if (n == -1)
             return null;
+        System.out.println(n + " characters read");
         return String.valueOf(str).substring(0, n);
     }
 
@@ -108,12 +107,16 @@ class BlockCompressor {
         BWBlock bwOut = BurrowsWheeler.transform(sourceBlock);
         CBlock block = new CBlock();
         copyBWIntoCBlock(bwOut, block);
+        System.out.println("Block bw: " + block);
         block.content = mtf.transform(block.content);
+        System.out.println("Block mtf: " + block);
         return block;
     }
 
     private String reverseBlock(CBlock block) {
+        System.out.println("Block mtf: " + block);
         block.content = mtf.reverse(block.content);
+        System.out.println("Block bw: " + block);
         BWBlock bwb = toBWBlock(block);
         return BurrowsWheeler.reverse(bwb);
     }

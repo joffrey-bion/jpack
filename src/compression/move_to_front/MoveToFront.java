@@ -33,6 +33,7 @@ public class MoveToFront {
      * Creates a new {@code MoveToFront} encoder or decoder.
      */
     public MoveToFront() {
+        System.out.println("new MTF list");
         list = new MTFList();
     }
 
