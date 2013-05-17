@@ -1,4 +1,4 @@
-package compression.move_to_front;
+package com.joffrey_bion.jpack.compression.move_to_front;
 
 /**
  * A class used to apply the move-to-front transform to characters in a stream, or to

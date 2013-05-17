@@ -1,4 +1,4 @@
-package compression.huffman.adaptive;
+package com.joffrey_bion.jpack.compression.huffman.adaptive;
 
 // TODO maybe keep track of the root of the tree in each node
 public class DHTree {

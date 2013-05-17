@@ -1,4 +1,4 @@
-package binary_io;
+package com.joffrey_bion.jpack.binary_io;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;

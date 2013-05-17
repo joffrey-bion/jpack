@@ -1,4 +1,4 @@
-package compression.move_to_front;
+package com.joffrey_bion.jpack.compression.move_to_front;
 
 /**
  * This helper class performs a circular rotation, shifting character codes, and

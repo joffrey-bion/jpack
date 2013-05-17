@@ -1,4 +1,4 @@
-package compression.huffman.semi_adaptive;
+package com.joffrey_bion.jpack.compression.huffman.semi_adaptive;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -6,9 +6,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.TreeMap;
 
-import binary_io.BinReader;
-import binary_io.BinWriter;
-import binary_io.UnicodeReader;
+import com.joffrey_bion.jpack.binary_io.BinReader;
+import com.joffrey_bion.jpack.binary_io.BinWriter;
+import com.joffrey_bion.jpack.binary_io.UnicodeReader;
+
 
 /**
  * This static class uses Huffman algorithm to encode a text file into a binary file,

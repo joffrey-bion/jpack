@@ -1,4 +1,4 @@
-package compression.burrows_wheeler;
+package com.joffrey_bion.jpack.compression.burrows_wheeler;
 
 /**
  * Represents a block of text transformed via Burrows-Wheeler transform. It contains

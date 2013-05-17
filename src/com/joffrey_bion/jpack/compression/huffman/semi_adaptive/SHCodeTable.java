@@ -1,4 +1,4 @@
-package compression.huffman.semi_adaptive;
+package com.joffrey_bion.jpack.compression.huffman.semi_adaptive;
 
 import java.util.TreeMap;
 

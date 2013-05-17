@@ -1,16 +1,17 @@
-package compression;
+package com.joffrey_bion.jpack.compression;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import binary_io.BinHelper;
-import binary_io.UnicodeReader;
+import com.joffrey_bion.jpack.binary_io.BinHelper;
+import com.joffrey_bion.jpack.binary_io.UnicodeReader;
+import com.joffrey_bion.jpack.compression.burrows_wheeler.BWBlock;
+import com.joffrey_bion.jpack.compression.burrows_wheeler.BurrowsWheeler;
+import com.joffrey_bion.jpack.compression.move_to_front.MoveToFront;
 
-import compression.burrows_wheeler.BWBlock;
-import compression.burrows_wheeler.BurrowsWheeler;
-import compression.move_to_front.MoveToFront;
+
 
 /**
  * Part of the {@link Compressor} that uses only algorithms that work on blocks of

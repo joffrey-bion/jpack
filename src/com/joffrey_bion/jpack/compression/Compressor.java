@@ -1,10 +1,11 @@
-package compression;
+package com.joffrey_bion.jpack.compression;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import compression.huffman.semi_adaptive.StaticHuffman;
+import com.joffrey_bion.jpack.compression.huffman.semi_adaptive.StaticHuffman;
+
 
 /**
  * Provides the compression and decompression methods to manipulate the files given

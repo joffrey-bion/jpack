@@ -1,4 +1,4 @@
-package compression.huffman.adaptive;
+package com.joffrey_bion.jpack.compression.huffman.adaptive;
 
 public class DynamicHuffman {
 
