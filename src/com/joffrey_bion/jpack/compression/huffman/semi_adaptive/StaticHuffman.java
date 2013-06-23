@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.TreeMap;
 
-import com.joffrey_bion.jpack.binary_io.BinReader;
-import com.joffrey_bion.jpack.binary_io.BinWriter;
+import com.joffrey_bion.jpack.binary_io.BinFileReader;
+import com.joffrey_bion.jpack.binary_io.BinFileWriter;
 import com.joffrey_bion.jpack.binary_io.UnicodeReader;
 
 
@@ -51,7 +51,7 @@ public class StaticHuffman {
         // build a code table corresponding to the tree
         SHCodeTable table = new SHCodeTable(huffmanTree);
         // write the size of the original file
-        BinWriter writer = new BinWriter(destName);
+        BinFileWriter writer = new BinFileWriter(destName);
         writer.writeLongWithLength(huffmanTree.getNbCharactersRead());
         // encode the tree in the file
         writeTree(writer, huffmanTree);
@@ -74,7 +74,7 @@ public class StaticHuffman {
      *            The relative path to the destination text file to create/overwrite.
      */
     public static void decode(String sourceName, String destName) throws IOException {
-        BinReader reader = new BinReader(sourceName);
+        BinFileReader reader = new BinFileReader(sourceName);
         // read the original file size
         long nbChars = reader.readLongWithLength();
         // decode the huffman tree
@@ -126,12 +126,12 @@ public class StaticHuffman {
      * enumeration. See this class description for details.
      * 
      * @param writer
-     *            The {@link BinWriter} to use to write in the file.
+     *            The {@link BinFileWriter} to use to write in the file.
      * @param huffmanTree
      *            The tree to encode.
      * @see StaticHuffman
      */
-    private static void writeTree(BinWriter writer, SHTree huffmanTree) throws IOException {
+    private static void writeTree(BinFileWriter writer, SHTree huffmanTree) throws IOException {
         if (huffmanTree == null)
             return; // in case of empty file, no tree written
         if (huffmanTree.isLeaf()) {
@@ -151,11 +151,11 @@ public class StaticHuffman {
      * details.
      * 
      * @param reader
-     *            The {@link BinWriter} to use to write in the file.
+     *            The {@link BinFileWriter} to use to write in the file.
      * @return The decoded Huffman tree.
      * @see StaticHuffman
      */
-    private static SHTree readTree(BinReader reader) throws IOException {
+    private static SHTree readTree(BinFileReader reader) throws IOException {
         if (reader.readBit()) {
             // 1 means this is a leaf, and is followed by the character code
             return new SHTree(reader.readChar());
@@ -172,10 +172,10 @@ public class StaticHuffman {
      * Decodes one character from the encoded file.
      * 
      * @param reader
-     *            The {@link BinReader} to use to read the file.
+     *            The {@link BinFileReader} to use to read the file.
      * @return The decoded {@code Character}.
      */
-    private static char decodeChar(BinReader reader, SHTree huffmanTree) throws IOException {
+    private static char decodeChar(BinFileReader reader, SHTree huffmanTree) throws IOException {
         SHTree tree = huffmanTree;
         // read bits to browse the tree until a leaf is reached
         while (!tree.isLeaf()) {

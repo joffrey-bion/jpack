@@ -140,8 +140,13 @@ public class SHTree implements Comparable<SHTree> {
     /**
      * Uses the given character frequencies to build a Huffman tree.
      * 
+     * @param frequencies
+     *            A {@link Map} between the characters of a text and their number of
+     *            occurrences in the text.
+     * 
      * @return The Huffman tree corresponding to the frequencies of the characters in
-     *         the specified map, or {@code null} if the specified map is empty.
+     *         the specified {@code Map}, or {@code null} if the specified
+     *         {@code Map} is empty.
      */
     public static SHTree buildTree(Map<Character, Integer> frequencies) {
         // will store all the subtrees during the tree construction

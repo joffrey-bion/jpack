@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class BinReader {
+public class BinFileReader {
 
     private BufferedInputStream reader;
     private String buffer;
@@ -18,7 +18,7 @@ public class BinReader {
      * @throws FileNotFoundException
      *             If the given file does not exist.
      */
-    public BinReader(String filename) throws FileNotFoundException {
+    public BinFileReader(String filename) throws FileNotFoundException {
         reader = new BufferedInputStream(new FileInputStream(filename));
         buffer = "";
     }

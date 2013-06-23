@@ -18,13 +18,13 @@ public class UnicodeReader extends Reader {
     private static final int BOM_SIZE = 4;
     private final BufferedReader reader;
     private String encoding;
-    
+
     /**
-     * Creates a UnicodeReader for the given file. Uses system default encoding if
-     * BOM is not found.
+     * Creates a {@code UnicodeReader} for the specified file. Uses system default
+     * encoding if BOM is not found.
      * 
-     * @param in
-     *            Input stream.
+     * @param filename
+     *            Input file.
      * @throws IOException
      *             If an I/O error occurs.
      */
@@ -33,10 +33,10 @@ public class UnicodeReader extends Reader {
     }
 
     /**
-     * Creates a UnicodeReader for the given file.
+     * Creates a {@code UnicodeReader} for the specified file.
      * 
-     * @param in
-     *            Input stream.
+     * @param filename
+     *            Input file.
      * @param defaultEncoding
      *            Default encoding to be used if BOM is not found, or
      *            <code>null</code> to use system default encoding.
