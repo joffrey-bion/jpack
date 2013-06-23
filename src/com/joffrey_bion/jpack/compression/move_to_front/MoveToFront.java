@@ -33,7 +33,6 @@ public class MoveToFront {
      * Creates a new {@code MoveToFront} encoder or decoder.
      */
     public MoveToFront() {
-        System.out.println("new MTF list");
         list = new MTFList();
     }
 
@@ -74,6 +73,7 @@ public class MoveToFront {
      * @see #rawTransform(Character)
      */
     public Character transform(Character c) {
+        // does not use rawTransform() to be more efficient
         int index = list.indexOf(c);
         list.moveToFront(index, c);
         return MTFCharShift.intToChar(index);
@@ -89,6 +89,7 @@ public class MoveToFront {
      * @see #rawReverse(int)
      */
     public Character reverse(Character i) {
+        // does not use rawReverse() to be more efficient
         int index = MTFCharShift.charToInt(i);
         char c = list.get(index);
         list.moveToFront(index, c);

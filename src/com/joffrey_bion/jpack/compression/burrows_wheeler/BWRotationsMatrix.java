@@ -71,7 +71,12 @@ class BWRotationsMatrix {
     private final int length;
     private Integer[] rotations;
 
-    /** Creates the rotations matrix associated to the given source block. */
+    /**
+     * Creates the rotations matrix associated to the given source block.
+     * 
+     * @param block
+     *            The source block to create the matrix for.
+     */
     public BWRotationsMatrix(String block) {
         sourceBlock = block;
         length = block.length();
@@ -81,12 +86,24 @@ class BWRotationsMatrix {
         }
     }
 
-    /** Returns the character at position i in the given rotation. */
+    /**
+     * Returns the character at position {@code i} in the given {@code rotation}.
+     * 
+     * @param rotation
+     *            The number of the rotation, as explained in this class description.
+     * @param i
+     *            The position of the desired character in the rotation.
+     * @return The character at position {@code i} in the given {@code rotation}.
+     */
     private char getRotationCharAt(int rotation, int i) {
         return sourceBlock.charAt((i + rotation) % length);
     }
 
-    /** Returns the last column of this matrix as a {@code String}. */
+    /**
+     * Returns the last column of this matrix as a {@code String}.
+     * 
+     * @return The last column of this matrix.
+     */
     public String getLastColumn() {
         StringBuilder sb = new StringBuilder();
         for (int rot : rotations) {
@@ -95,7 +112,11 @@ class BWRotationsMatrix {
         return sb.toString();
     }
 
-    /** Returns the number of the row corresponding to the original block. */
+    /**
+     * Returns the number of the row corresponding to the original block.
+     * 
+     * @return The row number of the original block.
+     */
     public int getSourceBlockLineNum() {
         for (int i = 0; i < length; i++) {
             if (rotations[i] == 0) {
@@ -130,7 +151,7 @@ class BWRotationsMatrix {
         Arrays.sort(rotations, comparator);
     }
 
-    /** For testing purpose only, with short strings! */
+    /** For testing purpose, to be used only with short strings. */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

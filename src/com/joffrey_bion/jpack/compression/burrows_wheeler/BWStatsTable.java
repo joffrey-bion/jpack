@@ -3,7 +3,7 @@ package com.joffrey_bion.jpack.compression.burrows_wheeler;
 import java.util.TreeMap;
 
 /**
- * A table containing statistics about occurences of the characters in a
+ * A table containing statistics about occurrences of the characters in a
  * Burrows-Wheeler transformed block. It contains information that is used to decode
  * such a block:
  * <ul>
@@ -21,6 +21,7 @@ class BWStatsTable {
 
     /** @see #getNbPreviousMatches(int) */
     private int[] prevMatch;
+    
     /** @see #getNbCharsLessThan(char) */
     private TreeMap<Character, Integer> nbLessThan;
 
@@ -33,9 +34,7 @@ class BWStatsTable {
      *            {@link BurrowsWheeler#transform(String)}.
      */
     public BWStatsTable(String block) {
-        prevMatch = new int[block.length()];
         TreeMap<Character, Integer> frequencies = fillPrevMatch(block);
-        nbLessThan = new TreeMap<>();
         fillNbLessThan(frequencies);
     }
 
@@ -48,6 +47,7 @@ class BWStatsTable {
      * @return A mapping of each character to its number of occurrences (frequency).
      */
     private TreeMap<Character, Integer> fillPrevMatch(String block) {
+        prevMatch = new int[block.length()];
         TreeMap<Character, Integer> frequencies = new TreeMap<>();
         for (int i = 0; i < block.length(); i++) {
             char c = block.charAt(i);
@@ -70,6 +70,7 @@ class BWStatsTable {
      *            (frequency).
      */
     private void fillNbLessThan(TreeMap<Character, Integer> frequencies) {
+        nbLessThan = new TreeMap<>();
         for (Character c1 : frequencies.keySet()) {
             // initialization at 0
             nbLessThan.put(c1, 0);

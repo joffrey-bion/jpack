@@ -13,7 +13,7 @@ import java.util.ArrayList;
 class MTFList extends ArrayList<Character> {
 
     /** 
-     * Creates a new MTFList with all characters in lexicographical order. 
+     * Creates a new MTFList with all characters (in the Basic Multilingual Pane) in lexicographical order. 
      */
     public MTFList() {
         super();
@@ -23,8 +23,8 @@ class MTFList extends ArrayList<Character> {
     }
 
     /**
-     * Moves the given character (which is at the given position) to the front of the
-     * list. The {@code Character} c
+     * Moves the specified character (which is at the given position) to the front of the
+     * list.
      * 
      * @param position
      *            The current position of the character to move to the front.

@@ -20,16 +20,28 @@ class MTFCharShift {
 
     private static final char MOST_RECURRENT_CHARS_START = 'A';
 
-    /** Gives the character corresponding to the given code. */
-    public static char intToChar(int i) {
-        return (char) rangeModulo(i + MOST_RECURRENT_CHARS_START, Character.MIN_VALUE,
+    /**
+     * Gives the character corresponding to the specified shifted code.
+     * 
+     * @param code
+     *            The shifted code of a character obtained by
+     *            {@link #charToInt(char)}
+     * @return The corresponding character.
+     */
+    public static char intToChar(int code) {
+        return (char) rangeModulo(code + MOST_RECURRENT_CHARS_START, Character.MIN_VALUE,
                 Character.MAX_VALUE);
     }
 
-    /** Gives the code of the given character. */
+    /**
+     * Gives the shifted code of the specified character.
+     * 
+     * @param c
+     *            A character to encode.
+     * @return The shifted code of the specified character.
+     */
     public static int charToInt(char c) {
-        return rangeModulo(c - MOST_RECURRENT_CHARS_START, Character.MIN_VALUE,
-                Character.MAX_VALUE);
+        return rangeModulo(c - MOST_RECURRENT_CHARS_START, Character.MIN_VALUE, Character.MAX_VALUE);
     }
 
     /**
@@ -46,7 +58,8 @@ class MTFCharShift {
     private static int rangeModulo(int value, int min, int max) {
         int rangeLength = max + 1 - min;
         int valueShifted = (value - min) % rangeLength;
-        // Java accepts negative modulo (-1 % 2 == -1 instead of 1), this is corrected here
+        // Java accepts negative modulo (-1 % 2 == -1 instead of 1), this is
+        // corrected here
         return (valueShifted < 0 ? valueShifted + rangeLength : valueShifted) + min;
     }
 
