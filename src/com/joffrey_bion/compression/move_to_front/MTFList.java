@@ -1,4 +1,4 @@
-package com.joffrey_bion.jpack.compression.move_to_front;
+package com.joffrey_bion.compression.move_to_front;
 
 import java.util.ArrayList;
 
@@ -12,19 +12,28 @@ import java.util.ArrayList;
 @SuppressWarnings("serial")
 class MTFList extends ArrayList<Character> {
 
-    /** 
-     * Creates a new MTFList with all characters (in the Basic Multilingual Pane) in lexicographical order. 
+    /**
+     * Creates a new {@code MTFList} with all characters (in the Basic Multilingual
+     * Pane) in lexicographical order.
      */
     public MTFList() {
         super();
+        reset();
+    }
+
+    /**
+     * Resets this {@code MTFList} to the lexicographical order.
+     */
+    public void reset() {
+        clear();
         for (int i = Character.MIN_VALUE; i <= Character.MAX_VALUE; i++) {
             add(MTFCharShift.intToChar(i));
         }
     }
 
     /**
-     * Moves the specified character (which is at the given position) to the front of the
-     * list.
+     * Moves the specified character (which is at the given position) to the front of
+     * the list.
      * 
      * @param position
      *            The current position of the character to move to the front.

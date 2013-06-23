@@ -1,5 +1,5 @@
 package com.joffrey_bion.jpack;
-import com.joffrey_bion.jpack.compression.Compressor;
+import com.joffrey_bion.compression.Compressor;
 
 public class JPack {
 

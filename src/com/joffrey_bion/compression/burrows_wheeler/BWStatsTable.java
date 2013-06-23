@@ -1,4 +1,4 @@
-package com.joffrey_bion.jpack.compression.burrows_wheeler;
+package com.joffrey_bion.compression.burrows_wheeler;
 
 import java.util.TreeMap;
 

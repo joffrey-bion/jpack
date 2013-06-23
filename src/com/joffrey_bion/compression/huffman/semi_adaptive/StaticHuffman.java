@@ -1,4 +1,4 @@
-package com.joffrey_bion.jpack.compression.huffman.semi_adaptive;
+package com.joffrey_bion.compression.huffman.semi_adaptive;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.TreeMap;
 
-import com.joffrey_bion.jpack.binary_io.BinFileReader;
-import com.joffrey_bion.jpack.binary_io.BinFileWriter;
-import com.joffrey_bion.jpack.binary_io.UnicodeReader;
+import com.joffrey_bion.binary_io.BinFileReader;
+import com.joffrey_bion.binary_io.BinFileWriter;
+import com.joffrey_bion.binary_io.UnicodeReader;
 
 
 /**

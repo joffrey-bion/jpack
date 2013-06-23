@@ -1,4 +1,4 @@
-package com.joffrey_bion.jpack.binary_io;
+package com.joffrey_bion.binary_io;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

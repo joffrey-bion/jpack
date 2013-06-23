@@ -1,4 +1,4 @@
-package com.joffrey_bion.jpack.compression.huffman.semi_adaptive;
+package com.joffrey_bion.compression.huffman.semi_adaptive;
 
 import java.util.Map;
 import java.util.PriorityQueue;
