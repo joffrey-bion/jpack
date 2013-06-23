@@ -3,6 +3,11 @@ package com.joffrey_bion.jpack.compression.burrows_wheeler;
 /**
  * This static class provides 2 methods to apply both the transform and the reverse
  * transform of Burrows-Wheeler.
+ * <p>
+ * The goal of this transform is to increase the length and number of runs in a text
+ * block, and more generally, local correlations. This transform uses the fact that
+ * in most languages, a letter is usually preceded by the same set of letters.
+ * </p>
  * 
  * @author <a href="mailto:joffrey.bion@gmail.com">Joffrey Bion</a>
  */
