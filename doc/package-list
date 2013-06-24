@@ -1,0 +1,8 @@
+
+com.joffrey_bion.binary_io
+com.joffrey_bion.compression
+com.joffrey_bion.compression.burrows_wheeler
+com.joffrey_bion.compression.huffman.adaptive
+com.joffrey_bion.compression.huffman.semi_adaptive
+com.joffrey_bion.compression.move_to_front
+com.joffrey_bion.jpack
