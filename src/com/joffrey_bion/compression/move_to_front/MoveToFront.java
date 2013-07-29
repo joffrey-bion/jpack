@@ -6,8 +6,7 @@ package com.joffrey_bion.compression.move_to_front;
  * <p>
  * <b>Important:</b> All characters in the same message have to be encoded (or
  * decoded) by the same {@code MoveToFront} object. However, the list has to be
- * reinitialized (or a new object created) between an encoding and a decoding
- * processes.
+ * reinitialized (or a new object created) between encoding and decoding processes.
  * </p>
  * <p>
  * Characters can be encoded using the original transform or the adapted transform.

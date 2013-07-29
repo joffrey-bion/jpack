@@ -9,10 +9,10 @@ package com.joffrey_bion.compression.burrows_wheeler;
  */
 public class BWBlock {
 
-    /** The transformed text bloc */
+    /** The transformed text block */
     public final String content;
 
-    /** The index of the source bloc in the sorted list of rotations */
+    /** The index of the source block in the sorted list of rotations */
     public final int index;
 
     /**
