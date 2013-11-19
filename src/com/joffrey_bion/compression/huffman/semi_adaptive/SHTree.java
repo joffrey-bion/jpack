@@ -74,6 +74,8 @@ public class SHTree implements Comparable<SHTree> {
 
     /**
      * Returns whether this tree is a leaf.
+     * 
+     * @return {@code true} if this is a leaf.
      */
     public boolean isLeaf() {
         return character != null;
@@ -121,10 +123,9 @@ public class SHTree implements Comparable<SHTree> {
     /**
      * Compares this tree to the specified tree using their frequencies:
      * <ul>
-     * <li>The frequency of a leaf is given in the constructor
-     * {@link #SHTree(Character, int)}.</li>
+     * <li>The frequency of a leaf is the frequency of the corresponding character.</li>
      * <li>The frequency of an internal node is the sum of the frequencies of its
-     * sons, and is computed in the constructor {@link #SHTree(SHTree, SHTree)} .</li>
+     * sons.</li>
      * </ul>
      * 
      * @param tree

@@ -10,7 +10,6 @@ import com.joffrey_bion.binary_io.BinFileReader;
 import com.joffrey_bion.binary_io.BinFileWriter;
 import com.joffrey_bion.binary_io.UnicodeReader;
 
-
 /**
  * This static class uses Huffman algorithm to encode a text file into a binary file,
  * or decode a binary file (previously encoded via this encoder) into a text file.
@@ -44,6 +43,8 @@ public class StaticHuffman {
      * @param destName
      *            The relative path to the destination binary file to
      *            create/overwrite.
+     * @throws IOException
+     *             If any I/O error occurs.
      */
     public static void encode(String sourceName, String destName) throws IOException {
         // read the file and build a huffman tree according to characters frequencies
@@ -72,6 +73,8 @@ public class StaticHuffman {
      *            The relative path to the source binary file.
      * @param destName
      *            The relative path to the destination text file to create/overwrite.
+     * @throws IOException
+     *             If any I/O error occurs.
      */
     public static void decode(String sourceName, String destName) throws IOException {
         BinFileReader reader = new BinFileReader(sourceName);
@@ -82,7 +85,8 @@ public class StaticHuffman {
         if (nbChars > 0) // no tree to read if the original file is empty
             huffmanTree = readTree(reader);
         // decode each character in the file with the tree
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destName), "UTF-8"));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+                destName), "UTF-8"));
         while (nbChars > 0) {
             writer.write(decodeChar(reader, huffmanTree));
             nbChars--;

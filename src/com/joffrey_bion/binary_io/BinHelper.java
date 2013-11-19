@@ -9,6 +9,7 @@ public class BinHelper {
      * @param str
      *            The {@code String} to complete.
      * @param length
+     *            The length to reach.
      * @return A {@code String} of the specified {@code length}, ending with
      *         {@code str} and starting with zeros.
      */

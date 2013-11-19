@@ -23,8 +23,20 @@ public class BinFileWriter {
         buffer = "";
     }
 
-    /** Writes the given binary string to a buffer that will be written byte by byte. */
+    /**
+     * Writes the given binary string to a buffer that will be written byte by byte.
+     * 
+     * @param bin
+     *            A binary {@code String}. This {@code String} must contain only the
+     *            characters '0' or '1'.
+     * @throws IOException
+     *             If any I/O error occurs.
+     */
     public void write(String bin) throws IOException {
+        if (!bin.matches("{0|1}*")) {
+            throw new IllegalArgumentException("The input string '" + bin
+                    + "' must contain only 0s and 1s.");
+        }
         buffer += bin;
         // write the excess byte by byte
         while (buffer.length() >= 8) {
@@ -36,6 +48,11 @@ public class BinFileWriter {
     /**
      * Writes the given long to the file, with leading zeros to reach
      * {@link Long#SIZE}.
+     * 
+     * @param value
+     *            The value to write.
+     * @throws IOException
+     *             If any I/O error occurs.
      */
     public void writeLong(long value) throws IOException {
         writeValue(value, Long.SIZE);
@@ -44,6 +61,11 @@ public class BinFileWriter {
     /**
      * Writes the given integer to the file, with leading zeros to reach
      * {@link Integer#SIZE}.
+     * 
+     * @param value
+     *            The value to write.
+     * @throws IOException
+     *             If any I/O error occurs.
      */
     public void writeInteger(int value) throws IOException {
         writeValue(value, Integer.SIZE);
@@ -52,6 +74,11 @@ public class BinFileWriter {
     /**
      * Writes the given character's code to the file, with leading zeros to reach
      * {@link Character#SIZE}.
+     * 
+     * @param value
+     *            The value to write.
+     * @throws IOException
+     *             If any I/O error occurs.
      */
     public void writeCharacter(char value) throws IOException {
         writeValue(value, Character.SIZE);
@@ -64,6 +91,8 @@ public class BinFileWriter {
      *            The value to write to the binary file.
      * @param size
      *            The number of bits to use to write the value.
+     * @throws IOException
+     *             If any I/O error occurs.
      */
     private void writeValue(long value, int size) throws IOException {
         String binStr = BinHelper.addLeadingZeros(Long.toBinaryString(value), size);
@@ -71,16 +100,26 @@ public class BinFileWriter {
     }
 
     /**
-     * Writes the given int value to the file, preceded by 5 bits indicating the number of
-     * bits used to write it.
+     * Writes the given int value to the file, preceded by 5 bits indicating the
+     * number of bits used to write it.
+     * 
+     * @param value
+     *            The value to write.
+     * @throws IOException
+     *             If any I/O error occurs.
      */
     public void writeIntegerWithLength(int value) throws IOException {
         writeWithLength(value, 5);
     }
 
     /**
-     * Writes the given long value to the file, preceded by 6 bits indicating the number of
-     * bits used to write it.
+     * Writes the given long value to the file, preceded by 6 bits indicating the
+     * number of bits used to write it.
+     * 
+     * @param value
+     *            The value to write.
+     * @throws IOException
+     *             If any I/O error occurs.
      */
     public void writeLongWithLength(long value) throws IOException {
         writeWithLength(value, 6);
@@ -105,7 +144,9 @@ public class BinFileWriter {
         write(binStr);
     }
 
-    /** Only call this method from {@link #write(String)}. */
+    /**
+     * Only call this method from {@link #write(String)}.
+     */
     private void writeByte(String byteStr) throws IOException {
         if (byteStr.length() != 8) {
             throw new IllegalArgumentException("Wrong length (" + byteStr.length()
@@ -120,7 +161,9 @@ public class BinFileWriter {
 
     }
 
-    /** Closes the file, flushing the buffer. */
+    /**
+     * Closes the file, flushing the buffer.
+     */
     public void close() {
         try {
             if (buffer.length() != 0) {
@@ -132,7 +175,9 @@ public class BinFileWriter {
         }
     }
 
-    /** Completes a binary {@code String} shorter than 8 bits to a full byte. */
+    /**
+     * Completes a binary {@code String} shorter than 8 bits to a full byte.
+     */
     private static String completeByte(String bin) {
         int length = bin.length();
         if (length > 8) {

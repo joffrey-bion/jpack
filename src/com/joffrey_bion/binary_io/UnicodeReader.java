@@ -8,7 +8,7 @@ import java.io.PushbackInputStream;
 import java.io.Reader;
 
 /**
- * A reader that read and skips the BOM (Byte Order Mark), using it to determine the
+ * A reader that reads and skips the BOM (Byte Order Mark), using it to determine the
  * encoding of the file.
  * 
  * @author <a href="mailto:joffrey.bion@gmail.com">Joffrey Bion</a>
