@@ -1,43 +1,36 @@
 package com.joffrey_bion.binary_io;
 
 import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
-public class BinFileWriter {
+public class BinaryOutputStream extends BufferedOutputStream {
 
-    private BufferedOutputStream writer;
-    private String buffer;
+    private String buffer = "";
 
-    /**
-     * Creates a new writer for the given file.
-     * 
-     * @param filename
-     *            The relative path to the file to write. Creates the file if it does
-     *            not exist, overwrite it otherwise.
-     * @throws IOException
-     *             If any error occurs while writing to the file.
-     */
-    public BinFileWriter(String filename) throws IOException {
-        writer = new BufferedOutputStream(new FileOutputStream(filename));
-        buffer = "";
+    public BinaryOutputStream(OutputStream out) {
+        super(out);
+    }
+
+    public BinaryOutputStream(OutputStream out, int size) {
+        super(out, size);
     }
 
     /**
      * Writes the given binary string to a buffer that will be written byte by byte.
      * 
-     * @param bin
+     * @param binaryString
      *            A binary {@code String}. This {@code String} must contain only the
      *            characters '0' or '1'.
      * @throws IOException
      *             If any I/O error occurs.
      */
-    public void write(String bin) throws IOException {
-        if (!bin.matches("{0|1}*")) {
-            throw new IllegalArgumentException("The input string '" + bin
+    public void write(String binaryString) throws IOException {
+        if (!binaryString.matches("{0|1}*")) {
+            throw new IllegalArgumentException("The input string '" + binaryString
                     + "' must contain only 0s and 1s.");
         }
-        buffer += bin;
+        buffer += binaryString;
         // write the excess byte by byte
         while (buffer.length() >= 8) {
             writeByte(buffer.substring(0, 8));
@@ -46,7 +39,41 @@ public class BinFileWriter {
     }
 
     /**
-     * Writes the given long to the file, with leading zeros to reach
+     * Writes the specified bit to this stream.
+     * 
+     * @param bit
+     *            The bit to write: 0 or 1
+     * @throws IOException
+     *             If any I/O error occurs.
+     */
+    public void writeBit(int bit) throws IOException {
+        if (bit == 1) {
+            write("1");
+        } else if (bit == 0) {
+            write("0");
+        } else {
+            throw new IllegalArgumentException("The specified integer is neither 0 nor 1.");
+        }
+    }
+
+    /**
+     * Writes the specified bit to this stream.
+     * 
+     * @param bit
+     *            The bit to write: {@code true} for 1, {@code false} for 0
+     * @throws IOException
+     *             If any I/O error occurs.
+     */
+    public void writeBit(boolean bit) throws IOException {
+        if (bit) {
+            write("1");
+        } else {
+            write("0");
+        }
+    }
+
+    /**
+     * Writes the given long to this stream, with leading zeros to reach
      * {@link Long#SIZE}.
      * 
      * @param value
@@ -59,7 +86,7 @@ public class BinFileWriter {
     }
 
     /**
-     * Writes the given integer to the file, with leading zeros to reach
+     * Writes the given integer to this stream, with leading zeros to reach
      * {@link Integer#SIZE}.
      * 
      * @param value
@@ -72,7 +99,7 @@ public class BinFileWriter {
     }
 
     /**
-     * Writes the given character's code to the file, with leading zeros to reach
+     * Writes the given character's code to this stream, with leading zeros to reach
      * {@link Character#SIZE}.
      * 
      * @param value
@@ -85,10 +112,11 @@ public class BinFileWriter {
     }
 
     /**
-     * Writes the given value to the file, with leading zeros to reach {@code size}.
+     * Writes the given value to this stream, with leading zeros to reach
+     * {@code size}.
      * 
      * @param value
-     *            The value to write to the binary file.
+     *            The value to write to this stream.
      * @param size
      *            The number of bits to use to write the value.
      * @throws IOException
@@ -100,7 +128,7 @@ public class BinFileWriter {
     }
 
     /**
-     * Writes the given int value to the file, preceded by 5 bits indicating the
+     * Writes the given int value to this stream, preceded by 5 bits indicating the
      * number of bits used to write it.
      * 
      * @param value
@@ -113,7 +141,7 @@ public class BinFileWriter {
     }
 
     /**
-     * Writes the given long value to the file, preceded by 6 bits indicating the
+     * Writes the given long value to this stream, preceded by 6 bits indicating the
      * number of bits used to write it.
      * 
      * @param value
@@ -126,12 +154,12 @@ public class BinFileWriter {
     }
 
     /**
-     * Writes the given {@code value} to the file, preceded by
+     * Writes the given {@code value} to this stream, preceded by
      * {@code magnitudeLength} bits indicating the number of bits used to write
      * {@code value}.
      * 
      * @param value
-     *            The value to write to the binary file
+     *            The value to write to this stream
      * @param magnitudeLength
      *            The number of bits used to indicate the number of bits used for
      *            {@code value} (beware of the number-of-bit-ception!)
@@ -154,7 +182,7 @@ public class BinFileWriter {
         }
         try {
             int b = Integer.parseInt(byteStr, 2);
-            writer.write(b); // TODO test with an integer > 255
+            write(b); // TODO test with an integer > 255
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Binary string expected, got '" + byteStr + "'");
         }
@@ -162,14 +190,15 @@ public class BinFileWriter {
     }
 
     /**
-     * Closes the file, flushing the buffer.
+     * Closes this stream, flushing the buffer.
      */
+    @Override
     public void close() {
         try {
             if (buffer.length() != 0) {
                 writeByte(completeByte(buffer));
             }
-            writer.close();
+            super.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

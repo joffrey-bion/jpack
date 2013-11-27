@@ -44,7 +44,7 @@ public class VitterHTree {
     private Node slideAndIncrement(Node p) {
         int w = p.getWeight();
         Block b = getNextBLock(getBlock(p));
-        if ((p.isLeaf() && !b.isLeafBlock()) || (!p.isLeaf() && b.isLeafBlock())) {
+        if ((p.isLeaf() && !isLeafBlock(b)) || (!p.isLeaf() && isLeafBlock(b))) {
             Node formerParent = getParent(p);
             Node newParent = slideAheadOf(b, p);
             p.incrementWeight();
@@ -55,6 +55,11 @@ public class VitterHTree {
             }
         }
         return null;
+    }
+
+    private boolean isLeafBlock(Block b) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
     /**
