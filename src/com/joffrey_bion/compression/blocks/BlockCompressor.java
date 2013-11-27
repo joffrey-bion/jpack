@@ -1,4 +1,4 @@
-package com.joffrey_bion.compression;
+package com.joffrey_bion.compression.blocks;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 
 import com.joffrey_bion.binary_io.BinHelper;
 import com.joffrey_bion.binary_io.UnicodeReader;
+import com.joffrey_bion.compression.Compressor;
 import com.joffrey_bion.compression.burrows_wheeler.BWBlock;
 import com.joffrey_bion.compression.burrows_wheeler.BurrowsWheeler;
 import com.joffrey_bion.compression.move_to_front.MoveToFront;
@@ -17,7 +18,7 @@ import com.joffrey_bion.compression.move_to_front.MoveToFront;
  * 
  * @author <a href="mailto:joffrey.bion@gmail.com">Joffrey Bion</a>
  */
-class BlockCompressor {
+public class BlockCompressor {
 
     private static final int BLOCK_SIZE = 4096;
     private static final int BLOCK_HEADER_SIZE = 3;
@@ -53,6 +54,7 @@ class BlockCompressor {
      *             If any problem occurs while reading or writing in the given files.
      */
     public void compress() throws IOException {
+        mtf.reset();
         String block;
         while ((block = readString(BLOCK_SIZE)) != null) {
             System.out.println("Block: " + block);
@@ -70,6 +72,7 @@ class BlockCompressor {
      *             If any problem occurs while reading or writing in the given files.
      */
     public void uncompress() throws IOException {
+        mtf.reset();
         CBlock block;
         while ((block = readCBlock()) != null) {
             writer.write(reverseBlock(block));
@@ -107,14 +110,14 @@ class BlockCompressor {
         CBlock block = new CBlock();
         copyBWIntoCBlock(bwOut, block);
         System.out.println("Block bw: " + block);
-        block.content = mtf.transform(block.content);
+        block.content = mtf.encodeBlock(block.content);
         System.out.println("Block mtf: " + block);
         return block;
     }
 
     private String reverseBlock(CBlock block) {
         System.out.println("Block mtf: " + block);
-        block.content = mtf.reverse(block.content);
+        block.content = mtf.decodeBlock(block.content);
         System.out.println("Block bw: " + block);
         BWBlock bwb = toBWBlock(block);
         return BurrowsWheeler.reverse(bwb);

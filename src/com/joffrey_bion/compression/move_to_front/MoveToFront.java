@@ -18,8 +18,8 @@ package com.joffrey_bion.compression.move_to_front;
  * {@code char}.</li>
  * <li>The adapted transform gives a {@code char} representation of the index, so
  * that it can actually be used for compression, without making the file bigger. This
- * adapted transform is applied via the methods {@link #transform(char)} and
- * {@link #reverse(char)}, and is also used in the block transforming methods.</li>
+ * adapted transform is applied via the methods {@link #encode(char)} and
+ * {@link #decode(char)}, and is also used in the block transforming methods.</li>
  * </ul>
  * </p>
  */
@@ -40,7 +40,7 @@ public class MoveToFront {
      * @param c
      *            The character to transform via MTF.
      * @return The index of c in the MTF list.
-     * @see #transform(char)
+     * @see #encode(char)
      */
     public int rawTransform(char c) {
         int index = list.indexOf(c);
@@ -54,7 +54,7 @@ public class MoveToFront {
      * @param index
      *            An index in the MTF list.
      * @return The character located at the given index in the MTF list.
-     * @see #reverse(char)
+     * @see #decode(char)
      */
     public char rawReverse(int index) {
         char c = list.get(index);
@@ -70,7 +70,7 @@ public class MoveToFront {
      * @return A character representation of the index of c in the MTF list.
      * @see #rawTransform(char)
      */
-    public char transform(char c) {
+    public char encode(char c) {
         // does not use rawTransform() to be more efficient
         int index = list.indexOf(c);
         list.moveToFront(index, c);
@@ -86,7 +86,7 @@ public class MoveToFront {
      * @return The character located at the given index in the MTF list.
      * @see #rawReverse(int)
      */
-    public char reverse(char i) {
+    public char decode(char i) {
         // does not use rawReverse() to be more efficient
         int index = MTFCharShift.charToInt(i);
         char c = list.get(index);
@@ -101,13 +101,13 @@ public class MoveToFront {
      *            The block to transform via MTF.
      * @return A {@code String} representation of the indexes of the block's
      *         characters in the MTF list, as if all characters were transformed one
-     *         by one via {@link #transform(char)}.
-     * @see #transform(char)
+     *         by one via {@link #encode(char)}.
+     * @see #encode(char)
      */
-    public String transform(String block) {
+    public String encodeBlock(String block) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < block.length(); i++) {
-            sb.append(transform(block.charAt(i)));
+            sb.append(encode(block.charAt(i)));
         }
         return sb.toString();
     }
@@ -119,19 +119,20 @@ public class MoveToFront {
      *            A {@code String} whose characters are the representations of
      *            indexes in the MTF list.
      * @return The reversed blocked as if all characters were reversed via
-     *         {@link #reverse(char)}.
-     * @see #reverse(char)
+     *         {@link #decode(char)}.
+     * @see #decode(char)
      */
-    public String reverse(String block) {
+    public String decodeBlock(String block) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < block.length(); i++) {
-            sb.append(reverse(block.charAt(i)));
+            sb.append(decode(block.charAt(i)));
         }
         return sb.toString();
     }
 
     /**
-     * Resets the list of characters to the lexicographical order.
+     * Resets the list of characters to the lexicographical order. This method has to
+     * be called between 2 encoding or decoding operations.
      */
     public void reset() {
         list.reset();

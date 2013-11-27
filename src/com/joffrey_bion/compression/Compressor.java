@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.joffrey_bion.compression.huffman.semi_adaptive.StaticHuffman;
+import com.joffrey_bion.compression.blocks.BlockCompressor;
+import com.joffrey_bion.compression.huffman.semi_adaptive.StaticHuffmanEncoder;
 
 
 /**
@@ -51,7 +52,7 @@ public class Compressor {
         // huffman encoding
         if (HUFFMAN)
             try {
-                StaticHuffman.encode(huffmanSource, destName);
+                new StaticHuffmanEncoder().encode(huffmanSource, destName);
             } catch (IOException e) {
                 System.err.println("I/O error in Huffman compression: " + e.getMessage());
             }
@@ -73,7 +74,7 @@ public class Compressor {
         // huffman decoding
         if (HUFFMAN) {
             try {
-                StaticHuffman.decode(sourceName, BLOCK ? TEMP_FILENAME2 : destName);
+                new StaticHuffmanEncoder().decode(sourceName, BLOCK ? TEMP_FILENAME2 : destName);
             } catch (IOException e) {
                 System.err.println("I/O error in Huffman decompression: " + e.getMessage());
                 return;

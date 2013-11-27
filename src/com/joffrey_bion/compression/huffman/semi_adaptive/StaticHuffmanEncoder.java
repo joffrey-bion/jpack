@@ -33,7 +33,10 @@ import com.joffrey_bion.binary_io.UnicodeReader;
  * 
  * @author <a href="mailto:joffrey.bion@gmail.com">Joffrey Bion</a>
  */
-public class StaticHuffman {
+public class StaticHuffmanEncoder {
+
+    public StaticHuffmanEncoder() {
+    }
 
     /**
      * Encodes the given text file via Huffman algorithm.
@@ -46,7 +49,7 @@ public class StaticHuffman {
      * @throws IOException
      *             If any I/O error occurs.
      */
-    public static void encode(String sourceName, String destName) throws IOException {
+    public void encode(String sourceName, String destName) throws IOException {
         // read the file and build a huffman tree according to characters frequencies
         SHTree huffmanTree = buildTree(sourceName);
         // build a code table corresponding to the tree
@@ -76,7 +79,7 @@ public class StaticHuffman {
      * @throws IOException
      *             If any I/O error occurs.
      */
-    public static void decode(String sourceName, String destName) throws IOException {
+    public void decode(String sourceName, String destName) throws IOException {
         BinFileReader reader = new BinFileReader(sourceName);
         // read the original file size
         long nbChars = reader.readLongWithLength();
@@ -133,7 +136,7 @@ public class StaticHuffman {
      *            The {@link BinFileWriter} to use to write in the file.
      * @param huffmanTree
      *            The tree to encode.
-     * @see StaticHuffman
+     * @see StaticHuffmanEncoder
      */
     private static void writeTree(BinFileWriter writer, SHTree huffmanTree) throws IOException {
         if (huffmanTree == null)
@@ -157,7 +160,7 @@ public class StaticHuffman {
      * @param reader
      *            The {@link BinFileWriter} to use to write in the file.
      * @return The decoded Huffman tree.
-     * @see StaticHuffman
+     * @see StaticHuffmanEncoder
      */
     private static SHTree readTree(BinFileReader reader) throws IOException {
         if (reader.readBit()) {

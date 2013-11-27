@@ -1,4 +1,4 @@
-package com.joffrey_bion.compression;
+package com.joffrey_bion.compression.blocks;
 
 /**
  * Represents a compressed block of text.

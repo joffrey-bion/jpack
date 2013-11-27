@@ -3,9 +3,9 @@ package com.joffrey_bion.compression.move_to_front;
 import java.util.ArrayList;
 
 /**
- * An {@code MTFList} is basically an {@link ArrayList} which is initialized with a
- * character set in the constructor, and provides the {@link #moveToFront(int, char)}
- * method for the algorithm purpose.
+ * An {@code MTFList} is basically an {@link ArrayList} which is initialized with the
+ * BMP set of characters in the constructor, and provides the
+ * {@link #moveToFront(int, char)} method for the algorithm purpose.
  * 
  * @author <a href="mailto:joffrey.bion@gmail.com">Joffrey Bion</a>
  */
