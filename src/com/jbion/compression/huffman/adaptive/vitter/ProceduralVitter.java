@@ -273,7 +273,6 @@ public class ProceduralVitter {
             q = leafToIncrement;
             slideAndIncrement();
         }
-
     }
 
     private void slideAndIncrement() {
