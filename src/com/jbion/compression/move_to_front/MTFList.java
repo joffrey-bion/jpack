@@ -9,7 +9,6 @@ import java.util.ArrayList;
  * 
  * @author <a href="mailto:joffrey.bion@gmail.com">Joffrey Bion</a>
  */
-@SuppressWarnings("serial")
 class MTFList extends ArrayList<Character> {
 
     /**
@@ -27,7 +26,7 @@ class MTFList extends ArrayList<Character> {
     public void reset() {
         clear();
         for (int i = Character.MIN_VALUE; i <= Character.MAX_VALUE; i++) {
-            add(MTFCharShift.intToChar(i));
+            add(IndicesAdapter.intToChar(i));
         }
     }
 
