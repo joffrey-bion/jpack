@@ -123,7 +123,9 @@ class RotationsMatrix {
 		throw new RuntimeException("source block not found among rotations");
 	}
 
-	/** Sort this rotations matrix lexicographically. */
+	/** 
+	 * Sorts this rotations matrix lexicographically. 
+	 */
 	public void sort() {
 		// creation of a comparator that understands the integers as rotations and
 		// compares the characters of the 2 rotations
@@ -143,7 +145,9 @@ class RotationsMatrix {
 		Arrays.sort(rotations, comparator);
 	}
 
-	/** For testing purpose, to be used only with short strings. */
+	/** 
+	 * For testing purpose, to be used only with short strings. 
+	 */
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();

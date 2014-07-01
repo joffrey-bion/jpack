@@ -53,6 +53,7 @@ class IndicesAdapter {
 	 *            The minimum value of the target range.
 	 * @param max
 	 *            The maximum value of the target range.
+	 * @return a value within the target interval
 	 */
 	private static int rangeModulo(int value, int min, int max) {
 		final int rangeLength = max + 1 - min;

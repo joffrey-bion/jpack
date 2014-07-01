@@ -110,27 +110,20 @@ public class ProceduralVitter {
 	 */
 	private int q;
 	private int leafToIncrement;
-
 	private int nbq;
-
 	private int bq;
-
 	private int par;
-
 	private int oldParent;
-
 	private int oldParity;
-
 	private boolean slide;
-
 	private int b;
-
 	private int bpar;
 
 	public ProceduralVitter() {
 		rep = new int[n + 1];
 		alpha = new char[n + 1];
 		block = new int[n + 1];
+		
 		weight = new long[Z + 1];
 		parent = new int[Z + 1];
 		parity = new int[Z + 1];
@@ -139,6 +132,7 @@ public class ProceduralVitter {
 		last = new int[Z + 1];
 		prevBlock = new int[Z + 1];
 		nextBlock = new int[Z + 1];
+		
 		stack = new byte[n];
 		M = 0;
 		E = 0;
