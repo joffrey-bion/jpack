@@ -2,53 +2,53 @@ package com.jbion.compression.huffman.adaptive.vitter;
 
 public class Node {
 
-    private Node leaderParent;
-    private Node leaderRightChild;
-    private int weight;
-    
-    public Node() {
-        weight = 0;
-    }
+	private Node leaderParent;
+	private Node leaderRightChild;
+	private int weight;
 
-    void incrementWeight() {
-        weight++;
-    }
-    
-    int getWeight() {
-        return weight;
-    }
+	public Node() {
+		weight = 0;
+	}
 
-    public Node getLeaderParent() {
-        return leaderParent;
-    }
+	void incrementWeight() {
+		weight++;
+	}
 
-    public void setLeaderParent(Node leaderParent) {
-        this.leaderParent = leaderParent;
-    }
+	int getWeight() {
+		return weight;
+	}
 
-    public Node getLeaderRightChild() {
-        return leaderRightChild;
-    }
+	public Node getLeaderParent() {
+		return leaderParent;
+	}
 
-    public void setLeaderRightChild(Node leaderRightChild) {
-        this.leaderRightChild = leaderRightChild;
-    }
+	public void setLeaderParent(Node leaderParent) {
+		this.leaderParent = leaderParent;
+	}
 
-    boolean isZeroNode() {
-        return false;
-    }
+	public Node getLeaderRightChild() {
+		return leaderRightChild;
+	}
 
-    boolean isLeaf() {
-        return false;
-    }
+	public void setLeaderRightChild(Node leaderRightChild) {
+		this.leaderRightChild = leaderRightChild;
+	}
 
-    public void setZeroChild(Node node) {
-        // TODO Auto-generated method stub
-        
-    }
+	boolean isZeroNode() {
+		return false;
+	}
 
-    public void setRightChild(Node node) {
-        // TODO Auto-generated method stub
-        
-    }
+	boolean isLeaf() {
+		return false;
+	}
+
+	public void setZeroChild(Node node) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void setRightChild(Node node) {
+		// TODO Auto-generated method stub
+
+	}
 }

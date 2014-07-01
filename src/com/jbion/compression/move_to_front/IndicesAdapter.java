@@ -6,15 +6,14 @@ package com.jbion.compression.move_to_front;
  * <p>
  * <b>Note:</b> This class also performs a circular rotation, shifting character
  * codes. The purpose of such an operation is only to change the set of characters
- * that will be used the most in the MTF encoded stream.<br/>
+ * that will be used the most in the MTF encoded stream.<br>
  * Indeed, we know that the lowest codes will be used often, while the highest codes
  * won't be used often (this is the very goal of MTF encoding). Since the lowest
  * codes in the charset are control characters, the encoded stream is not really
  * convenient to view and to check (while testing). That's why the charset is shifted
  * to start with more readable values such as the numbers or the letters.
  * </p>
- * 
- * @author <a href="mailto:joffrey.bion@gmail.com">Joffrey Bion</a>
+ *
  * @see MoveToFront
  */
 class IndicesAdapter {
@@ -23,7 +22,7 @@ class IndicesAdapter {
 
 	/**
 	 * Gives the character corresponding to the specified shifted code.
-	 * 
+	 *
 	 * @param code
 	 *            The shifted code of a character obtained by
 	 *            {@link #charToInt(char)}
@@ -35,7 +34,7 @@ class IndicesAdapter {
 
 	/**
 	 * Gives the shifted code of the specified character.
-	 * 
+	 *
 	 * @param c
 	 *            A character to encode.
 	 * @return The shifted code of the specified character.
@@ -47,7 +46,7 @@ class IndicesAdapter {
 	/**
 	 * Performs a modulo operation that brings {@code value} between {@code min} and
 	 * {@code max}.
-	 * 
+	 *
 	 * @param value
 	 *            The value from which to take the modulo.
 	 * @param min
@@ -56,8 +55,8 @@ class IndicesAdapter {
 	 *            The maximum value of the target range.
 	 */
 	private static int rangeModulo(int value, int min, int max) {
-		int rangeLength = max + 1 - min;
-		int valueShifted = (value - min) % rangeLength;
+		final int rangeLength = max + 1 - min;
+		final int valueShifted = (value - min) % rangeLength;
 		// Java accepts negative modulo (-1 % 2 == -1 instead of 1), this is
 		// corrected here
 		return (valueShifted < 0 ? valueShifted + rangeLength : valueShifted) + min;

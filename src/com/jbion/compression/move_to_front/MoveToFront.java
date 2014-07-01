@@ -11,6 +11,7 @@ package com.jbion.compression.move_to_front;
  * </p>
  * <p>
  * Characters can be encoded using the original transform or the adapted transform.
+ * </p>
  * <ul>
  * <li>The original transform represents a character by its index in the list of
  * recent used symbols, as an {@code int}. This transform is applied via the methods
@@ -22,11 +23,10 @@ package com.jbion.compression.move_to_front;
  * adapted transform is applied via the methods {@link #encode(char)} and
  * {@link #decode(char)}, and is also used in the block transforming methods.</li>
  * </ul>
- * </p>
  */
 public class MoveToFront {
 
-	private MTFList list;
+	private final MTFList list;
 
 	/**
 	 * Creates a new {@code MoveToFront} encoder or decoder.
@@ -37,35 +37,35 @@ public class MoveToFront {
 
 	/**
 	 * Transforms a single character.
-	 * 
+	 *
 	 * @param c
 	 *            The character to transform via MTF.
 	 * @return The index of c in the MTF list.
 	 * @see #encode(char)
 	 */
 	public int rawTransform(char c) {
-		int index = list.indexOf(c);
+		final int index = list.indexOf(c);
 		list.moveToFront(index, c);
 		return index;
 	}
 
 	/**
 	 * Retrieves a single character.
-	 * 
+	 *
 	 * @param index
 	 *            An index in the MTF list.
 	 * @return The character located at the given index in the MTF list.
 	 * @see #decode(char)
 	 */
 	public char rawReverse(int index) {
-		char c = list.get(index);
+		final char c = list.get(index);
 		list.moveToFront(index, c);
 		return c;
 	}
 
 	/**
 	 * Transforms a single character.
-	 * 
+	 *
 	 * @param c
 	 *            The character to transform via MTF.
 	 * @return A character representation of the index of c in the MTF list.
@@ -73,7 +73,7 @@ public class MoveToFront {
 	 */
 	public char encode(char c) {
 		// does not use rawTransform() to be more efficient
-		int index = list.indexOf(c);
+		final int index = list.indexOf(c);
 		list.moveToFront(index, c);
 		return IndicesAdapter.intToChar(index);
 	}
@@ -81,7 +81,7 @@ public class MoveToFront {
 	/**
 	 * Retrieves the character corresponding to the given index (transformed
 	 * character).
-	 * 
+	 *
 	 * @param i
 	 *            The character representation of an index in the MTF list.
 	 * @return The character located at the given index in the MTF list.
@@ -89,15 +89,15 @@ public class MoveToFront {
 	 */
 	public char decode(char i) {
 		// does not use rawReverse() to be more efficient
-		int index = IndicesAdapter.charToInt(i);
-		char c = list.get(index);
+		final int index = IndicesAdapter.charToInt(i);
+		final char c = list.get(index);
 		list.moveToFront(index, c);
 		return c;
 	}
 
 	/**
 	 * Transforms a block of characters.
-	 * 
+	 *
 	 * @param block
 	 *            The block to transform via MTF.
 	 * @return A {@code String} representation of the indexes of the block's
@@ -106,7 +106,7 @@ public class MoveToFront {
 	 * @see #encode(char)
 	 */
 	public String encodeBlock(String block) {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < block.length(); i++) {
 			sb.append(encode(block.charAt(i)));
 		}
@@ -115,7 +115,7 @@ public class MoveToFront {
 
 	/**
 	 * Retrieves the block corresponding to the given transformed block.
-	 * 
+	 *
 	 * @param block
 	 *            A {@code String} whose characters are the representations of
 	 *            indexes in the MTF list.
@@ -124,7 +124,7 @@ public class MoveToFront {
 	 * @see #decode(char)
 	 */
 	public String decodeBlock(String block) {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < block.length(); i++) {
 			sb.append(decode(block.charAt(i)));
 		}
