@@ -55,7 +55,9 @@ public class StaticHuffman {
 		// write the size of the original file
 		try (final BitOutputStream writer = new BitOutputStream(new FileOutputStream(destName));
 				final UnicodeReader reader = new UnicodeReader(sourceName)) {
-			writer.writeLongWithLength(huffmanTree.getNbCharactersRead());
+			final String binStr = Long.toBinaryString(huffmanTree.getNbCharactersRead());
+			writer.writeBits(binStr.length() - 1, 6);
+			writer.writeString(binStr);
 			// encode the tree in the file
 			writeTree(writer, huffmanTree);
 
@@ -81,8 +83,9 @@ public class StaticHuffman {
 		try (final BitInputStream reader = new BitInputStream(new FileInputStream(sourceName));
 				final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destName),
 						"UTF-8"))) {
-			// read the original file size
-			long nbChars = reader.readLongWithLength();
+            // read the original file size
+            final int length = (int) reader.readBits(6) + 1;
+            long nbChars = reader.readBits(length);
 			// decode the huffman tree
 			SHTree huffmanTree = null;
 			if (nbChars > 0) {
@@ -166,7 +169,7 @@ public class StaticHuffman {
 	 * @see StaticHuffman
 	 */
 	private static SHTree readTree(BitInputStream input) throws IOException {
-		if (input.readBitAsBoolean()) {
+		if (input.readBoolean()) {
 			// 1 means this is a leaf, and is followed by the character code
 			return new SHTree(input.readChar());
 		} else {
@@ -193,7 +196,7 @@ public class StaticHuffman {
 		SHTree tree = huffmanTree;
 		// read bits to browse the tree until a leaf is reached
 		while (!tree.isLeaf()) {
-			if (input.readBitAsBoolean()) {
+			if (input.readBoolean()) {
 				tree = tree.getOne();
 			} else {
 				tree = tree.getZero();
