@@ -57,6 +57,11 @@ public class VitterHTree {
 		return null;
 	}
 
+    private Node findBlockLeader(Node node) {
+        // TODO
+        return null;
+    }
+
 	private boolean isLeafBlock(Block b) {
 		// TODO Auto-generated method stub
 		return false;
@@ -124,11 +129,6 @@ public class VitterHTree {
 
 	private void swap(Node leaderOfQ, Node q) {
 		// TODO
-	}
-
-	private Node findBlockLeader(Node node) {
-		// TODO
-		return null;
 	}
 
 	private void incrementLeaderWeight(Node node) {

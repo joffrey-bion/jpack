@@ -2,8 +2,8 @@ package com.jbion.compression.huffman.adaptive.vitter;
 
 import java.io.IOException;
 
-import com.jbion.utils.io.binary.BinaryInputStream;
-import com.jbion.utils.io.binary.BinaryOutputStream;
+import com.jbion.utils.io.binary.BitInputStream;
+import com.jbion.utils.io.binary.BitOutputStream;
 
 /**
  * The original Pascal code of Vitter's paper, directly translated in Java, without
@@ -26,6 +26,24 @@ import com.jbion.utils.io.binary.BinaryOutputStream;
  * In the paper, arrays are indexed starting at 1. 0 is used to denote {@code null}.
  * It is reproduced here, the index 0 kept unused.
  * </p>
+ * <p>
+ * Other definitions:
+ * </p>
+ * <dl>
+ * <dt>leaf block</dt>
+ * <dd>all the leaves of a given weight</dd>
+ * <dt>internal block</dt>
+ * <dd>all the internal nodes of a given weight</dd>
+ * <dt>leader of a block</dt>
+ * <dd>largest numbered node in the block</dd>
+ * </dl>
+ * <p>
+ * Invariants of the algorithm:
+ * </p>
+ * <ul>
+ * <li>Blocks are linked together in increasing order by weight.</li>
+ * <li>The leaf block of a given weight always precedes the internal block of same weight.</li>
+ * </ul>
  */
 public class ProceduralVitter {
 
@@ -106,7 +124,7 @@ public class ProceduralVitter {
 	private int R;
 
 	/*
-	 * dirty global variables
+	 * dirty global variables (original paper)
 	 */
 	private int q;
 	private int leafToIncrement;
@@ -164,7 +182,7 @@ public class ProceduralVitter {
 		nextBlock[Z] = 0;
 	}
 
-	public void encodeAndTransmit(char j, BinaryOutputStream writer) throws IOException {
+	public void encodeAndTransmit(char j, BitOutputStream writer) throws IOException {
 		int node = rep[j];
 		int i = 0;
 		if (node <= M) {
@@ -202,19 +220,20 @@ public class ProceduralVitter {
 		update(j);
 	}
 
-	public char receiveAndDecode(BinaryInputStream reader) throws IOException {
+	public Character receiveAndDecode(BitInputStream stream) throws IOException {
+	    // TODO return something special when the end of stream is reached
 		int node = M == n ? n : Z;
 		while (node > n) {
 			// traverse down the tree
-			node = findChild(node, reader.readBitAsInt());
+			node = findChild(node, stream.readBit());
 		}
 		if (node == M) {
 			// decode 0-node
 			node = 0;
 			for (int i = 1; i <= E; i++) {
-				node = 2 * node + reader.readBitAsInt();
+				node = 2 * node + stream.readBit();
 			}
-			node = node < R ? 2 * node + reader.readBitAsInt() : node + R;
+			node = node < R ? 2 * node + stream.readBit() : node + R;
 			node++;
 		}
 		final char c = alpha[node];

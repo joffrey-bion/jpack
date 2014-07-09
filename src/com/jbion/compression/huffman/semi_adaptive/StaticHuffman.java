@@ -8,8 +8,8 @@ import java.io.OutputStreamWriter;
 import java.util.TreeMap;
 
 import com.jbion.utils.io.UnicodeReader;
-import com.jbion.utils.io.binary.BinaryInputStream;
-import com.jbion.utils.io.binary.BinaryOutputStream;
+import com.jbion.utils.io.binary.BitInputStream;
+import com.jbion.utils.io.binary.BitOutputStream;
 
 /**
  * This static class uses Huffman algorithm to encode a text file into a binary file,
@@ -34,9 +34,7 @@ import com.jbion.utils.io.binary.BinaryOutputStream;
  *
  * @author <a href="mailto:joffrey.bion@gmail.com">Joffrey Bion</a>
  */
-public class StaticHuffmanEncoder {
-
-	public StaticHuffmanEncoder() {}
+public class StaticHuffman {
 
 	/**
 	 * Encodes the given text file via Huffman algorithm.
@@ -49,13 +47,13 @@ public class StaticHuffmanEncoder {
 	 * @throws IOException
 	 *             If any I/O error occurs.
 	 */
-	public void encode(String sourceName, String destName) throws IOException {
+	public static void encode(String sourceName, String destName) throws IOException {
 		// read the file and build a huffman tree according to characters frequencies
 		final SHTree huffmanTree = buildTree(sourceName);
 		// build a code table corresponding to the tree
 		final SHCodeTable table = new SHCodeTable(huffmanTree);
 		// write the size of the original file
-		try (final BinaryOutputStream writer = new BinaryOutputStream(new FileOutputStream(destName));
+		try (final BitOutputStream writer = new BitOutputStream(new FileOutputStream(destName));
 				final UnicodeReader reader = new UnicodeReader(sourceName)) {
 			writer.writeLongWithLength(huffmanTree.getNbCharactersRead());
 			// encode the tree in the file
@@ -64,7 +62,7 @@ public class StaticHuffmanEncoder {
 			// encode each character of the original file into the output file
 			int character;
 			while ((character = reader.read()) != -1) {
-				writer.write(table.getCode((char) character));
+				writer.writeString(table.getCode((char) character));
 			}
 		}
 	}
@@ -79,8 +77,8 @@ public class StaticHuffmanEncoder {
 	 * @throws IOException
 	 *             If any I/O error occurs.
 	 */
-	public void decode(String sourceName, String destName) throws IOException {
-		try (final BinaryInputStream reader = new BinaryInputStream(new FileInputStream(sourceName));
+	public static void decode(String sourceName, String destName) throws IOException {
+		try (final BitInputStream reader = new BitInputStream(new FileInputStream(sourceName));
 				final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destName),
 						"UTF-8"))) {
 			// read the original file size
@@ -133,24 +131,24 @@ public class StaticHuffmanEncoder {
 	 * enumeration. See this class description for details.
 	 * 
 	 * @param writer
-	 *            the {@link BinaryOutputStream} to write to
+	 *            the {@link BitOutputStream} to write to
 	 * @param huffmanTree
 	 *            the tree to encode.
 	 * @throws IOException
 	 *             if an I/O error occurs
-	 * @see StaticHuffmanEncoder
+	 * @see StaticHuffman
 	 */
-	private static void writeTree(BinaryOutputStream writer, SHTree huffmanTree) throws IOException {
+	private static void writeTree(BitOutputStream writer, SHTree huffmanTree) throws IOException {
 		if (huffmanTree == null) {
 			return; // in case of empty file, no tree written
 		}
 		if (huffmanTree.isLeaf()) {
 			// when a leaf is reached, write 1 followed by the character code
-			writer.write("1");
-			writer.writeCharacter(huffmanTree.getChar());
+			writer.writeString("1");
+			writer.writeChar(huffmanTree.getChar());
 		} else {
 			// when we are at a node, write 0 followed by the 0 son then the 1 son
-			writer.write("0");
+			writer.writeString("0");
 			writeTree(writer, huffmanTree.getZero());
 			writeTree(writer, huffmanTree.getOne());
 		}
@@ -161,13 +159,13 @@ public class StaticHuffmanEncoder {
 	 * description for details.
 	 * 
 	 * @param input
-	 *            the {@link BinaryInputStream} to read from
+	 *            the {@link BitInputStream} to read from
 	 * @return The decoded Huffman tree.
 	 * @throws IOException
 	 *             if an I/O error occurs
-	 * @see StaticHuffmanEncoder
+	 * @see StaticHuffman
 	 */
-	private static SHTree readTree(BinaryInputStream input) throws IOException {
+	private static SHTree readTree(BitInputStream input) throws IOException {
 		if (input.readBitAsBoolean()) {
 			// 1 means this is a leaf, and is followed by the character code
 			return new SHTree(input.readChar());
@@ -184,14 +182,14 @@ public class StaticHuffmanEncoder {
 	 * Decodes one character from the specified binary stream.
 	 * 
 	 * @param input
-	 *            the {@link BinaryInputStream} to read from
+	 *            the {@link BitInputStream} to read from
 	 * @param huffmanTree
 	 *            the huffman tree to use to decode the character
 	 * @return The decoded {@code Character}.
 	 * @throws IOException
 	 *             if an I/O error occurs
 	 */
-	private static char decodeChar(BinaryInputStream input, SHTree huffmanTree) throws IOException {
+	private static char decodeChar(BitInputStream input, SHTree huffmanTree) throws IOException {
 		SHTree tree = huffmanTree;
 		// read bits to browse the tree until a leaf is reached
 		while (!tree.isLeaf()) {
