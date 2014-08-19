@@ -61,16 +61,20 @@ public class ProceduralVitter {
     private final int[] rep;
 
     /*
-     * Arrays indexed by node numbers (1..n)
+     * Arrays indexed by leaf node numbers (1..n)
      */
     /** {@code alpha[q]} = the letter represented by the node q */
     private final char[] alpha;
-    /** {@code block[q]} = block number of node q */
-    private final int[] block;
 
     /*
-     * Arrays indexed by block numbers (1..2n-1)
+     * Arrays indexed by node numbers (M..n | M+n..2n-1)
      */
+    /** {@code block[q]} = block number of node q */
+    private final int[] block;
+    
+    /*
+     * Arrays indexed by block numbers (1..2n-1)
+     */    
     /** {@code weight[b]} = weight of each node in block b */
     private final long[] weight;
     /**
@@ -139,9 +143,11 @@ public class ProceduralVitter {
     private int bpar;
 
     public ProceduralVitter() {
+        System.out.println("Vitter initialization...");
         rep = new int[n + 1];
         alpha = new char[n + 1];
-        block = new int[n + 1];
+        
+        block = new int[Z + 1];
 
         weight = new long[Z + 1];
         parent = new int[Z + 1];
@@ -152,19 +158,19 @@ public class ProceduralVitter {
         prevBlock = new int[Z + 1];
         nextBlock = new int[Z + 1];
 
-        stack = new byte[n];
+        stack = new byte[n + 1];
         M = 0;
         E = 0;
         R = -1;
-        for (char i = 0; i < n; i++) {
+        for (int c = 0; c < n; c++) {
             M++;
             R++;
             if (2 * R == M) {
                 E++;
                 R = 0;
             }
-            alpha[i] = i;
-            rep[i] = i;
+            alpha[c] = (char) c;
+            rep[c] = c;
         }
         // initialize node n as the 0-node
         block[n] = 1;
@@ -181,9 +187,11 @@ public class ProceduralVitter {
             nextBlock[i] = i + 1;
         }
         nextBlock[Z] = 0;
+        System.out.println("Initialization done.");
     }
 
     public void encodeAndTransmit(char j, BitOutputStream writer) throws IOException {
+        System.out.println();
         int node = rep[j];
         int i = 0;
         if (node <= M) {
@@ -196,47 +204,56 @@ public class ProceduralVitter {
                 node -= R;
                 t = E;
             }
-            for (final int ii = 1; ii <= t; i++) {
+            System.out.print("encode letter of zero weight: ");
+            for (int ii = 1; ii <= t; ii++) {
                 i++;
                 stack[i] = (byte) (node % 2);
-                node /= 2;
+                node = node / 2;
+                System.out.print(stack[i]);
             }
+            System.out.println();
             node = M;
         }
-        int root;
-        if (M == n) {
-            root = n;
-        } else {
-            root = Z;
-        }
+        int root = M == n ? n : Z;
+        System.out.print("traverse up the tree: node = " + node);
         while (node != root) {
             // traverse up the tree
             i++;
-            stack[i] = (byte) ((first[block[node]] - node + parity[block[node]]) % 2);
-            node = parent[block[node]] - (first[block[node]] - node + 1 - parity[block[node]]) / 2;
+            int bl = block[node];
+            stack[i] = (byte) ((first[bl] - node + parity[bl]) % 2);
+            System.out.print("[b="+ bl+" p=" + parent[bl] + "]");
+            node = parent[bl] - (first[bl] - node + 1 - parity[bl]) / 2;
+            System.out.print(", " + node);
         }
-        for (final int ii = i; i >= 1; i--) {
+        System.out.println(" (root)");
+        System.out.print("  => write bits: ");
+        for (int ii = i; ii >= 1; ii--) {
+            System.out.print(stack[ii]);
             writer.writeBit(stack[ii]);
         }
+        System.out.println();
         update(j);
     }
 
     public Character receiveAndDecode(BitInputStream stream) throws IOException {
-        // TODO return something special when the end of stream is reached
-        int node = M == n ? n : Z;
-        while (node > n) {
-            // traverse down the tree
-            node = findChild(node, (int) stream.readBits(1));
+        try {
+            int node = M == n ? n : Z;
+            while (node > n) {
+                // traverse down the tree
+                node = findChild(node, (int) stream.readBits(1));
+            }
+            if (node == M) {
+                // decode 0-node
+                node = (int) stream.readBits(E);
+                node = node < R ? 2 * node + ((int) stream.readBits(1)) : node + R;
+                node++;
+            }
+            final char c = alpha[node];
+            update(c);
+            return c;
+        } catch (IllegalStateException e) {
+            return null;
         }
-        if (node == M) {
-            // decode 0-node
-            node = (int) stream.readBits(E);
-            node = node < R ? 2 * node + ((int) stream.readBits(1)) : node + R;
-            node++;
-        }
-        final char c = alpha[node];
-        update(c);
-        return c;
     }
 
     private int findChild(int j, int childParity) {
@@ -291,8 +308,8 @@ public class ProceduralVitter {
         par = parent[bq];
         oldParent = par;
         oldParity = parity[bq];
-        if (q <= n && first[nbq] > n && weight[nbq] == weight[bq] || q > n && first[nbq] <= n
-                && weight[nbq] == weight[bq] + 1) {
+        if ((q <= n && first[nbq] > n && weight[nbq] == weight[bq])
+                || (q > n && first[nbq] <= n && weight[nbq] == weight[bq] + 1)) {
             // Slide q over the next block
             slide = true;
             oldParent = parent[nbq];
@@ -318,7 +335,7 @@ public class ProceduralVitter {
                     }
                 }
             }
-            // Adjust parent pointers for block nbq )
+            // Adjust parent pointers for block nbq
             parent[nbq] = parent[nbq] - 1 + parity[nbq];
             parity[nbq] = 1 - parity[nbq];
             nbq = nextBlock[nbq];
@@ -403,7 +420,7 @@ public class ProceduralVitter {
             interchangeLeaves(q, M);
 
             if (R == 0) {
-                R = M / Z;
+                R = M / 2;
                 if (R > 0) {
                     E--;
                 }
