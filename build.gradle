@@ -1,0 +1,92 @@
+// loads the launch4j dependency for build time
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'edu.sc.seis.gradle:launch4j:1.0.6'
+    }
+}
+
+plugins {
+    id "com.jfrog.bintray" version "1.0"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'launch4j'
+apply plugin: 'application'
+
+group = 'org.hildan.jpack'
+version = '1.0'
+sourceCompatibility = '1.8'
+
+mainClassName = "org.hildan.jpack.JPack"
+
+repositories {
+    mavenCentral()
+    maven {
+        url  "http://dl.bintray.com/joffrey-bion/maven" 
+    }
+}
+
+dependencies {
+    compile 'org.hildan.utils:io-utils:0.9'
+    testCompile 'junit:junit:4.+'
+}
+
+// to build a fat jar with all dependencies included
+jar {
+    manifest { attributes "Main-Class": mainClassName }
+    from { 
+    	configurations.compile.collect { 
+    		it.isDirectory() ? it : zipTree(it) 
+    	}
+    }
+}
+
+// wraps the executable jar into an exe file
+launch4j {
+    mainClassName = project.mainClassName
+    headerType = "console"
+    jar = 'lib/' + project.jar.archiveName
+    outfile = project.name + '-' + project.version + '.exe'
+    windowTitle = project.name
+}
+
+// defines what to distribute (jar and exe)
+artifacts {
+    archives jar
+    archives file(buildDir.name + '/' + launch4j.outputDir + '/' + launch4j.outfile)
+}
+
+bintrayUpload.dependsOn tasks.launch4j
+
+bintray {
+	user = project.bintrayUsername // taken from gradle.properties
+	key = project.bintrayApiKey // taken from gradle.properties
+	configurations = ['archives']
+	
+    publish = true // the version should be auto published after an upload
+	
+	pkg {
+	    repo = project.bintrayRepoApps // taken from gradle.properties
+	    name = project.name
+	    desc = 'A text file compressor.'
+	    
+	    String githubRepoName = 'jpack'
+	    websiteUrl = 'https://github.com/joffrey-bion/' + githubRepoName
+	    issueTrackerUrl = 'https://github.com/joffrey-bion/' + githubRepoName + '/issues'
+	    vcsUrl = 'https://github.com/joffrey-bion/' + githubRepoName + '.git'
+	    
+	    licenses = ['MIT']
+	    labels = ['jpack', 'compression', 'compressor', 'text', 'binary', 'burrows-wheeler', 'bwt', 'huffman', 'move-to-front', 'mtf']
+	    
+	    publicDownloadNumbers = false
+	    
+	    version {
+	        name = project.version // Bintray logical version name
+	    }
+	}
+}
