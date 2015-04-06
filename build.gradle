@@ -1,17 +1,11 @@
-// loads the launch4j dependency for build time
+// launch4j is used to package the program in an exe file
 buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'edu.sc.seis.gradle:launch4j:1.0.6'
-    }
+    repositories { mavenCentral() }
+    dependencies { classpath 'edu.sc.seis.gradle:launch4j:1.0.6' }
 }
 
-plugins {
-    id "com.jfrog.bintray" version "1.0"
-}
+// bintray plugin is used to upload artifacts to a bintray repo
+plugins { id "com.jfrog.bintray" version "1.0" }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
@@ -26,9 +20,7 @@ mainClassName = "org.hildan.jpack.JPack"
 
 repositories {
     mavenCentral()
-    maven {
-        url  "http://dl.bintray.com/joffrey-bion/maven" 
-    }
+    maven { url  "http://dl.bintray.com/joffrey-bion/maven"  }
 }
 
 dependencies {
@@ -39,10 +31,10 @@ dependencies {
 // to build a fat jar with all dependencies included
 jar {
     manifest { attributes "Main-Class": mainClassName }
-    from { 
-    	configurations.compile.collect { 
-    		it.isDirectory() ? it : zipTree(it) 
-    	}
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
     }
 }
 
@@ -64,29 +56,24 @@ artifacts {
 bintrayUpload.dependsOn tasks.launch4j
 
 bintray {
-	user = project.bintrayUsername // taken from gradle.properties
-	key = project.bintrayApiKey // taken from gradle.properties
-	configurations = ['archives']
-	
+    user = project.bintrayUsername // taken from gradle.properties
+    key = project.bintrayApiKey // taken from gradle.properties
+    configurations = ['archives']
+
     publish = true // the version should be auto published after an upload
-	
-	pkg {
-	    repo = project.bintrayRepoApps // taken from gradle.properties
-	    name = project.name
-	    desc = 'A text file compressor.'
-	    
-	    String githubRepoName = 'jpack'
-	    websiteUrl = 'https://github.com/joffrey-bion/' + githubRepoName
-	    issueTrackerUrl = 'https://github.com/joffrey-bion/' + githubRepoName + '/issues'
-	    vcsUrl = 'https://github.com/joffrey-bion/' + githubRepoName + '.git'
-	    
-	    licenses = ['MIT']
-	    labels = ['jpack', 'compression', 'compressor', 'text', 'binary', 'burrows-wheeler', 'bwt', 'huffman', 'move-to-front', 'mtf']
-	    
-	    publicDownloadNumbers = false
-	    
-	    version {
-	        name = project.version // Bintray logical version name
-	    }
-	}
+
+    pkg {
+        repo = project.bintrayRepoApps // taken from gradle.properties
+        name = project.name
+        desc = 'A text file compressor.'
+        labels = ['jpack', 'compression', 'compressor', 'text', 'binary', 'burrows-wheeler', 'bwt', 'huffman', 'move-to-front', 'mtf']
+        
+        String githubRepoName = project.name
+        websiteUrl = 'https://github.com/joffrey-bion/' + githubRepoName
+        issueTrackerUrl = 'https://github.com/joffrey-bion/' + githubRepoName + '/issues'
+        vcsUrl = 'https://github.com/joffrey-bion/' + githubRepoName + '.git'
+
+        licenses = ['MIT']
+        version { gpg { sign = true } }
+    }
 }
